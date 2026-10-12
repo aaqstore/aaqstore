@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilih Game - Game Currency AAQ Store</title>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --border-color: #1f2937;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --accent-red: #ff3366;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 40px; }
+    header { background-color: var(--card-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .brand-logo img { height: 35px; width: auto; display: block; object-fit: contain; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; margin-bottom: 20px; transition: 0.2s; }
+    .back-btn:hover { border-color: var(--accent-red); }
+    .page-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 15px; border-left: 4px solid var(--accent-red); padding-left: 10px; }
+    .game-list-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .game-item-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 12px; transition: transform 0.2s, border-color 0.2s; }
+    .game-item-card:hover { transform: translateY(-2px); border-color: var(--accent-red); }
+    .game-item-card img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; background-color: #1f2937; flex-shrink: 0; }
+    .game-item-card .g-name { font-size: 0.9rem; font-weight: 600; line-height: 1.2; }
+    .game-item-card .g-cat { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; }
+    footer { text-align: center; padding: 25px 15px; font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-color); background-color: var(--card-bg); margin-top: 40px; line-height: 1.6; }
+    footer span { color: var(--text-main); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-logo"><img src="images/logo1.jpg" alt="AAQ STORE Logo"></div>
+  </header>
+  <div class="container">
+    <a href="index.html" class="back-btn">← Kembali</a>
+    <div class="page-title">Pilih Game - Game Currency</div>
+    <div class="game-list-grid">
+      <a href="undawn-gold.html" class="game-item-card">
+        <img src="images/icon.jpg" alt="Garena Undawn">
+        <div>
+          <div class="g-name">Garena Undawn</div>
+          <div class="g-cat">Gold Currency & Top Up</div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <footer>
+    <span>AAQ STORE - Official Gaming Store</span><br>Terpercaya & Aman<br><br>&copy; 2026 AAQ Store. All Rights Reserved.
+  </footer>
+</body>
+</html>

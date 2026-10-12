@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAQ Store - Official Gaming Store</title>
+  <!-- FontAwesome untuk ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --border-color: #1f2937;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --accent-red: #ff3366;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 80px; }
+    
+    header { background-color: var(--card-bg); padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .brand-logo img { height: 30px; width: auto; display: block; object-fit: contain; }
+    .header-right { display: flex; align-items: center; gap: 4px; }
+    .lang-badge { background-color: var(--border-color); color: var(--text-main); padding: 4px 6px; border-radius: 5px; font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+    .header-icon-btn { background-color: var(--border-color); border: none; color: var(--text-main); padding: 4px 7px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 3px; font-size: 0.72rem; font-weight: 600; text-decoration: none; transition: 0.2s; position: relative; }
+    .header-icon-btn:hover { border-color: var(--accent-red); }
+    .search-icon-btn { background-color: var(--border-color); border: none; color: var(--accent-red); width: 28px; height: 28px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: 0.2s; }
+    .search-icon-btn:hover { background-color: var(--accent-red); color: white; }
+    .header-badge { background-color: var(--accent-red); color: white; border-radius: 50%; width: 14px; height: 14px; font-size: 0.55rem; display: flex; align-items: center; justify-content: center; }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
+    
+    .banner-container { width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); margin-bottom: 20px; background-color: var(--card-bg); position: relative; }
+    .banner-slide { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+    
+    .audio-btn { 
+      position: absolute; 
+      bottom: 12px; 
+      right: 12px; 
+      background-color: rgba(17, 24, 39, 0.85); 
+      color: var(--text-main); 
+      border: 1px solid var(--border-color); 
+      width: 36px; 
+      height: 36px; 
+      border-radius: 50%; 
+      font-size: 0.95rem; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      backdrop-filter: blur(4px); 
+      transition: 0.2s; 
+      z-index: 10; 
+    }
+    .audio-btn:hover { 
+      background-color: var(--accent-red); 
+      border-color: var(--accent-red); 
+    }
+
+    .search-box { margin-bottom: 20px; position: relative; display: none; }
+    .search-input { width: 100%; padding: 12px 18px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; }
+    .search-results { position: absolute; top: 100%; left: 0; right: 0; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-top: 5px; max-height: 250px; overflow-y: auto; z-index: 200; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
+    .search-item { padding: 12px 15px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-main); border-bottom: 1px solid var(--border-color); transition: 0.2s; }
+    .search-item:last-child { border-bottom: none; }
+    .search-item:hover { background-color: #1f2937; }
+    .search-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
+    .search-item .item-title { font-size: 0.9rem; font-weight: 600; }
+    .search-item .item-cat { font-size: 0.75rem; color: var(--text-muted); }
+
+    .promo-slider-container { width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); margin-bottom: 25px; background-color: var(--card-bg); position: relative; }
+    .promo-slides { display: flex; width: 300%; transition: transform 0.5s ease-in-out; }
+    .promo-slide-img { width: 33.333%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; flex-shrink: 0; }
+    
+    .slider-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.4); cursor: pointer; transition: 0.3s; }
+    .dot.active { background-color: var(--accent-red); width: 20px; border-radius: 4px; }
+
+    .section-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; margin-top: 25px; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--accent-red); padding-left: 10px; }
+    .section-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; padding-left: 14px; }
+    
+    .game-grid-horizontal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; overflow-x: auto; }
+    .game-card-hz { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 5px; text-align: center; text-decoration: none; color: var(--text-main); transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; align-items: center; }
+    .game-card-hz:hover { transform: translateY(-2px); border-color: var(--accent-red); }
+    .game-card-hz img { width: 50px; height: 50px; object-fit: cover; border-radius: 10px; margin-bottom: 6px; background-color: #111827; }
+    .game-card-hz .title { font-size: 0.75rem; font-weight: 600; line-height: 1.2; margin-bottom: 2px; }
+    .game-card-hz .sub { font-size: 0.68rem; color: var(--text-muted); }
+    
+    /* STYLING MODAL / POP-UP MINIMALIS */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); z-index: 200; display: none; backdrop-filter: blur(3px); align-items: flex-end; }
+    .modal-content { background-color: var(--card-bg); border-top: 1px solid var(--border-color); border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; width: 100%; max-height: 85vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+    .modal-title { font-size: 1rem; font-weight: 700; }
+    .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+    
+    .cart-items-list { max-height: 180px; overflow-y: auto; margin-bottom: 15px; display: grid; gap: 8px; }
+    .cart-item-row { background-color: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+    .cart-item-info .c-name { font-weight: 600; margin-bottom: 2px; }
+    .cart-item-info .c-price { color: var(--accent-red); font-weight: 700; }
+    .btn-remove-item { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.9rem; }
+    .checkout-summary { background-color: var(--bg-dark); border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+    .checkout-summary b { color: var(--text-main); }
+    .btn-confirm-order { background-color: var(--accent-red); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; display: block; }
+
+    .contact-card-btn {
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 15px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+    .contact-card-btn:hover {
+      border-color: var(--accent-red);
+      background-color: #1f2937;
+    }
+
+    .admin-note-box {
+      background-color: rgba(255, 51, 102, 0.08);
+      border: 1px solid rgba(255, 51, 102, 0.3);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 15px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      text-align: center;
+    }
+    .admin-note-box b {
+      color: var(--accent-red);
+    }
+
+    /* --- CSS NAVIGASI BAWAH AAQ STORE --- */
+    .aaq-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      background-color: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 150;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+      padding: 0 10px;
+    }
+
+    .aaq-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-family: sans-serif;
+      transition: color 0.2s ease;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .aaq-nav-item i {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .aaq-nav-item:hover, .aaq-nav-item.active {
+      color: var(--accent-red);
+    }
+
+    .aaq-nav-center {
+      position: relative;
+      top: -16px;
+    }
+
+    .aaq-fab-btn {
+      width: 50px;
+      height: 50px;
+      background-color: var(--accent-red);
+      border: 3px solid var(--bg-dark);
+      border-radius: 50%;
+      color: #ffffff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 51, 102, 0.4);
+      transition: transform 0.2s ease;
+      text-decoration: none;
+    }
+
+    .aaq-fab-btn:active {
+      transform: scale(0.95);
+    }
+
+    footer { text-align: center; padding: 25px 15px; font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-color); background-color: var(--card-bg); margin-top: 30px; line-height: 1.6; }
+    footer span { color: var(--text-main); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-logo">
+      <img src="images/logo1.jpg" alt="AAQ STORE Logo">
+    </div>
+    <div class="header-right">
+      <button class="search-icon-btn" onclick="toggleSearch()" title="Cari">
+        🔍
+      </button>
+      <div class="lang-badge">
+        <span>🇮🇩</span> ID
+      </div>
+      <button class="header-icon-btn" onclick="openCartModal()" title="Keranjang">
+        🛒 <span class="header-badge" id="mainCartBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- BANNER VIDEO -->
+    <div class="banner-container">
+      <video id="promoVideo" class="banner-slide" autoplay muted loop playsinline preload="auto">
+        <source src="images/promo.mp4" type="video/mp4">
+        Browser Anda tidak mendukung pemutaran video.
+      </video>
+      <button id="audioToggleBtn" class="audio-btn" onclick="toggleAudio()" title="Suara Video">
+        <i id="audioIcon" class="fas fa-volume-mute" style="color: #ff3366;"></i>
+      </button>
+    </div>
+
+    <div class="search-box" id="searchBoxContainer">
+      <input type="text" id="searchInput" class="search-input" placeholder="Cari Jasa Rekber, Joki, atau Item..." oninput="cariProduk()">
+      <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <!-- PROMO SLIDER -->
+    <div class="promo-slider-container">
+      <div class="promo-slides" id="promoSlides">
+        <img src="images/banner1.jpg" alt="Banner 1" class="promo-slide-img">
+        <img src="images/banner2.jpg" alt="Banner 2" class="promo-slide-img">
+        <img src="images/banner3.jpg" alt="Banner 3" class="promo-slide-img">
+      </div>
+      <div class="slider-dots" id="sliderDots">
+        <span class="dot active" onclick="currentSlide(0)"></span>
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+      </div>
+    </div>
+
+    <!-- JASA REKBER -->
+    <div class="section-title">JASA REKBER</div>
+    <div style="display: grid; grid-template-columns: 1fr; margin-top: 12px;">
+      <a href="rekber.html" class="game-card-hz" style="flex-direction: row; align-items: center; text-align: left; gap: 15px; padding: 12px 15px;">
+        <div style="background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 8px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">🛡️</div>
+        <div>
+          <div class="title" style="font-size: 0.9rem;">Fee MM / Rekber</div>
+          <div class="sub">Klik untuk Cek Fee</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- 4 KATEGORI UTAMA -->
+    <div class="section-title">🔥 Paling Banyak Dicari!</div>
+    <div class="section-subtitle">Beberapa produk yang paling populer saat ini.</div>
+    <div class="game-grid-horizontal">
+      <a href="game-currency.html" class="game-card-hz">
+        <img src="images/icon-gamecurrency.jpg" alt="Game Currency">
+        <div class="title">Game Currency</div>
+        <div class="sub">(1)</div>
+      </a>
+      <a href="jasa-joki.html" class="game-card-hz">
+        <img src="images/icon-jasajoki.jpg" alt="Jasa Joki">
+        <div class="title">Jasa Joki</div>
+        <div class="sub">(1)</div>
+      </a>
+      <a href="item-game.html" class="game-card-hz">
+        <img src="images/icon-item.jpg" alt="Item Game">
+        <div class="title">Item Game</div>
+        <div class="sub">(1)</div>
+      </a>
+      <a href="akun.html" class="game-card-hz">
+        <img src="images/icon-akun.jpg" alt="Akun Game">
+        <div class="title">Akun Game</div>
+        <div class="sub">(1)</div>
+      </a>
+    </div>
+
+    <!-- 4 KATEGORI BARU -->
+    <div class="game-grid-horizontal" style="margin-top: 8px;">
+      <div class="game-card-hz" onclick="alert('Kategori Top Up Segera Hadir!')">
+        <img src="images/icon-topup.jpg" alt="Top Up Game" onerror="this.src='images/sample.png'">
+        <div class="title">Top Up Game</div>
+        <div class="sub">Segera</div>
+      </div>
+      <div class="game-card-hz" onclick="alert('Kategori Booster Sosmed Segera Hadir!')">
+        <img src="images/icon-booster-sosmed.jpg" alt="Booster Sosmed" onerror="this.src='images/sample.png'">
+        <div class="title">Booster Sosmed</div>
+        <div class="sub">Segera</div>
+      </div>
+      <div class="game-card-hz" onclick="alert('Kategori Pulsa Segera Hadir!')">
+        <img src="images/icon-pulsa.jpg" alt="Pulsa & SIM" onerror="this.src='images/sample.png'">
+        <div class="title">Pulsa & SIM</div>
+        <div class="sub">Segera</div>
+      </div>
+      <div class="game-card-hz" onclick="alert('Kategori Aplikasi & Software Segera Hadir!')">
+        <img src="images/icon-aplikasi-software.jpg" alt="Aplikasi" onerror="this.src='images/sample.png'">
+        <div class="title">Aplikasi</div>
+        <div class="sub">Segera</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL KELOLA KERANJANG -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Keranjang Belanja</div>
+        <button class="close-modal" onclick="closeCheckoutModal()">✕</button>
+      </div>
+
+      <div id="cartSection">
+        <div class="cart-items-list" id="cartItemsContainer"></div>
+        <div class="checkout-summary" id="cartSummaryTotal">Total Belanja: <b>Rp 0</b></div>
+        <a id="cartWaBtn" href="#" target="_blank" class="btn-confirm-order" style="text-align: center; display: none; margin-bottom: 10px;">
+          Kirim Pesanan via WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL POP-UP KONTAK & MEDIA SOSIAL -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Hubungi Admin & Sosmed</div>
+        <button class="close-modal" onclick="closeAdminModal()">✕</button>
+      </div>
+      
+      <div class="admin-note-box">
+        ⚠️ Mohon bersabar dan <b>jangan spam chat</b>. Pesan Anda pasti akan dibalas oleh admin sesuai antrean. Terima kasih!
+      </div>
+
+      <div style="display: grid; gap: 8px; margin-bottom: 10px;">
+        <a href="https://wa.me/6285137997544" target="_blank" class="contact-card-btn">
+          <img src="images/icon-wa.jpg" alt="WA" style="width: 24px; height: 24px; border-radius: 5px; object-fit: cover;">
+          <span>WhatsApp</span>
+        </a>
+        <a href="https://www.instagram.com/aaqs.tore?psln=MTVwNTI1dnVkZGJrZQ==" target="_blank" class="contact-card-btn">
+          <img src="images/icon-ig.jpg" alt="IG" style="width: 24px; height: 24px; border-radius: 5px; object-fit: cover;">
+          <span>Instagram</span>
+        </a>
+        <a href="https://www.facebook.com/share/19PGy7oUa3/" target="_blank" class="contact-card-btn">
+          <img src="images/icon-fb.jpg" alt="FB" style="width: 24px; height: 24px; border-radius: 5px; object-fit: cover;">
+          <span>Facebook</span>
+        </a>
+        <a href="https://discord.com/users/@grazie0" target="_blank" class="contact-card-btn">
+          <img src="images/icon-dc.jpg" alt="DC" style="width: 24px; height: 24px; border-radius: 5px; object-fit: cover;">
+          <span>Discord</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BILAH NAVIGASI BAWAH (BOTTOM BAR) -->
+  <nav class="aaq-bottom-nav">
+    <a href="index.html" class="aaq-nav-item active">
+      <i class="fas fa-home"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="item-game.html" class="aaq-nav-item">
+      <i class="fas fa-gamepad"></i>
+      <span>Layanan</span>
+    </a>
+    
+    <div class="aaq-nav-center">
+      <a href="rekber.html" class="aaq-fab-btn" title="Cek Rekber / Menu Utama">
+        <i class="fas fa-shield-alt"></i>
+      </a>
+    </div>
+
+    <a href="testimoni.html" class="aaq-nav-item">
+      <i class="fas fa-star"></i>
+      <span>Testimoni</span>
+    </a>
+    
+    <button class="aaq-nav-item" onclick="openAdminModal()">
+      <i class="fas fa-headset"></i>
+      <span>Admin</span>
+    </button>
+  </nav>
+
+  <footer>
+    <span>AAQ STORE - Official Gaming Store</span><br>
+    Terpercaya & Aman<br><br>
+    &copy; 2026 AAQ Store. All Rights Reserved.
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+      document.getElementById('mainCartBadge').innerText = savedCart.length;
+    });
+
+    function openCartModal() {
+      let savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+      document.getElementById('modalTitle').innerText = "Keranjang Belanja (" + savedCart.length + ")";
+      renderCartItemsMain();
+      document.getElementById('checkoutModal').style.display = 'flex';
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').style.display = 'none';
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminModal').style.display = 'flex';
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').style.display = 'none';
+    }
+
+    function renderCartItemsMain() {
+      let savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+      const container = document.getElementById('cartItemsContainer');
+      const waBtn = document.getElementById('cartWaBtn');
+
+      if (savedCart.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">Keranjang Anda masih kosong.</div>`;
+        document.getElementById('cartSummaryTotal').innerHTML = `Total Belanja: <b>Rp 0</b>`;
+        waBtn.style.display = 'none';
+        return;
+      }
+
+      let html = "";
+      let totalSum = 0;
+      let itemsListStr = "";
+
+      savedCart.forEach((item, index) => {
+        totalSum += item.price;
+        itemsListStr += `- ${item.name} (${item.formatted})\n`;
+        html += `
+          <div class="cart-item-row">
+            <div class="cart-item-info">
+              <div class="c-name">${item.name}</div>
+              <div class="c-price">${item.formatted}</div>
+            </div>
+            <button class="btn-remove-item" onclick="removeFromCartMain(${index})">Hapus</button>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      document.getElementById('cartSummaryTotal').innerHTML = `Total Belanja: <b style="color:var(--accent-red); font-size:1rem;">Rp ${totalSum.toLocaleString('id-ID')}</b>`;
+
+      const text = `Halo Admin AAQ Store, saya mau checkout pesanan dari keranjang:\n\n${itemsListStr}\n\n• Total Pembayaran: Rp ${totalSum.toLocaleString('id-ID')}\n\nMohon instruksi selanjutnya ya!`;
+      waBtn.href = `https://wa.me/6285137997544?text=${encodeURIComponent(text)}`;
+      waBtn.style.display = 'block';
+    }
+
+    function removeFromCartMain(index) {
+      let savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+      savedCart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(savedCart));
+      document.getElementById('mainCartBadge').innerText = savedCart.length;
+      openCartModal();
+    }
+
+    function toggleSearch() {
+      const searchBox = document.getElementById("searchBoxContainer");
+      const searchInput = document.getElementById("searchInput");
+      if (searchBox.style.display === "block") {
+        searchBox.style.display = "none";
+      } else {
+        searchBox.style.display = "block";
+        searchInput.focus();
+        window.scrollTo({ top: searchBox.offsetTop - 70, behavior: 'smooth' });
+      }
+    }
+
+    const produkList = [
+      { nama: "Garena Undawn Gold", kategori: "Game Currency", url: "undawn-gold.html", img: "images/icon.jpg" },
+      { nama: "Garena Undawn Jasa Joki", kategori: "Jasa Joki", url: "jasa-joki.html", img: "images/icon.jpg" },
+      { nama: "Garena Undawn Item", kategori: "Item Game", url: "item-game.html", img: "images/icon.jpg" },
+      { nama: "Garena Undawn Akun", kategori: "Akun Game", url: "akun.html", img: "images/icon.jpg" },
+      { nama: "Fee MM / Rekber", kategori: "Jasa Rekber", url: "rekber.html", img: "images/icon-jasajoki.jpg" }
+    ];
+
+    function cariProduk() {
+      const keyword = document.getElementById("searchInput").value.toLowerCase().trim();
+      const resultsContainer = document.getElementById("searchResults");
+      if (keyword === "") {
+        resultsContainer.style.display = "none";
+        resultsContainer.innerHTML = "";
+        return;
+      }
+      const filtered = produkList.filter(item => 
+        item.nama.toLowerCase().includes(keyword) || item.kategori.toLowerCase().includes(keyword)
+      );
+      if (filtered.length > 0) {
+        let html = "";
+        filtered.forEach(item => {
+          html += `<a href="${item.url}" class="search-item">
+            <img src="${item.img}" alt="${item.nama}">
+            <div>
+              <div class="item-title">${item.nama}</div>
+              <div class="item-cat">${item.kategori}</div>
+            </div>
+          </a>`;
+        });
+        resultsContainer.innerHTML = html;
+        resultsContainer.style.display = "block";
+      } else {
+        resultsContainer.innerHTML = `<div style="padding: 12px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">Produk tidak ditemukan</div>`;
+        resultsContainer.style.display = "block";
+      }
+    }
+
+    function toggleAudio() {
+      var video = document.getElementById("promoVideo");
+      var icon = document.getElementById("audioIcon");
+      if (video.muted) {
+        video.muted = false;
+        icon.className = "fas fa-volume-up";
+        icon.style.color = "#ffffff";
+      } else {
+        video.muted = true;
+        icon.className = "fas fa-volume-mute";
+        icon.style.color = "#ff3366";
+      }
+    }
+
+    let currentIndex = 0;
+    const slides = document.getElementById("promoSlides");
+    const dots = document.getElementsByClassName("dot");
+    const totalSlides = 3;
+
+    function showSlide(index) {
+      if (index >= totalSlides) { currentIndex = 0; }
+      else if (index < 0) { currentIndex = totalSlides - 1; }
+      else { currentIndex = index; }
+      slides.style.transform = "translateX(-" + (currentIndex * 33.333) + "%)";
+      for (let i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "", 13);
+      }
+      dots[currentIndex].className += " active";
+    }
+
+    function currentSlide(index) {
+      showSlide(index);
+    }
+
+    setInterval(function() {
+      showSlide(currentIndex + 1);
+    }, 3500);
+  </script>
+</body>
+</html>

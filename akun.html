@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilih Game Akun - AAQ Store</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --border-color: #1f2937;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --accent-red: #ff3366;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 90px; }
+    
+    header { background-color: var(--card-bg); padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .brand-logo img { height: 30px; width: auto; display: block; object-fit: contain; }
+    .header-right { display: flex; align-items: center; gap: 6px; }
+    .header-icon-btn { background-color: var(--border-color); border: none; color: var(--text-main); padding: 6px 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none; }
+    .header-badge { background-color: var(--accent-red); color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
+
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 0.85rem; margin-bottom: 15px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 6px; transition: 0.2s; }
+    .back-btn:hover { color: var(--text-main); border-color: var(--accent-red); }
+
+    .section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-red); padding-left: 8px; }
+
+    .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .game-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; align-items: center; text-align: center; transition: 0.2s; cursor: pointer; }
+    .game-card:hover { border-color: var(--accent-red); transform: translateY(-2px); }
+    .game-card img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; margin-bottom: 8px; }
+    .game-card .g-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; }
+    .game-card .g-desc { font-size: 0.68rem; color: var(--text-muted); }
+
+    /* MODAL KERANJANG & ADMIN */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); z-index: 200; display: none; backdrop-filter: blur(3px); align-items: flex-end; }
+    .modal-content { background-color: var(--card-bg); border-top: 1px solid var(--border-color); border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+    .modal-title { font-size: 1rem; font-weight: 700; }
+    .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+    .cart-items-list { max-height: 180px; overflow-y: auto; margin-bottom: 15px; display: grid; gap: 8px; }
+    .cart-item-row { background-color: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+    .checkout-summary { background-color: var(--bg-dark); border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 0.8rem; color: var(--text-muted); }
+    .contact-card-btn { background-color: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; text-decoration: none; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.85rem; transition: 0.2s; margin-bottom: 6px; }
+    .contact-card-btn:hover { border-color: var(--accent-red); background-color: #1f2937; }
+    .payment-method-box { background-color: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 0.82rem; color: var(--text-muted); }
+    .payment-method-box b { color: var(--text-main); }
+    .admin-note-box { background-color: rgba(255, 51, 102, 0.08); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.78rem; color: var(--text-muted); text-align: center; }
+    .admin-note-box b { color: var(--accent-red); }
+    .btn-checkout-sosmed { background-color: var(--accent-red); color: white; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; display: block; }
+
+    .aaq-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background-color: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 150; box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5); padding: 0 10px; }
+    .aaq-nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-muted); font-size: 11px; font-family: sans-serif; transition: color 0.2s ease; cursor: pointer; background: none; border: none; }
+    .aaq-nav-item i { font-size: 18px; margin-bottom: 4px; }
+    .aaq-nav-item:hover, .aaq-nav-item.active { color: var(--accent-red); }
+    .aaq-nav-center { position: relative; top: -16px; }
+    .aaq-fab-btn { width: 50px; height: 50px; background-color: var(--accent-red); border: 3px solid var(--bg-dark); border-radius: 50%; color: #ffffff; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(255, 51, 102, 0.4); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-logo">
+      <img src="images/logo1.jpg" alt="AAQ STORE Logo">
+    </div>
+    <div class="header-right">
+      <div style="background: var(--border-color); padding: 4px 6px; border-radius: 5px; font-size: 0.7rem; font-weight: 600;">🇮🇩 ID</div>
+      <button class="header-icon-btn" onclick="openCartModal()">
+        🛒 <span class="header-badge" id="mainCartBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Kembali</a>
+
+    <div class="section-title">
+      <span>🛡️ Pilih Game - Akun Game</span>
+    </div>
+
+    <div class="game-grid">
+      <!-- Menggunakan icon.jpg sesuai nama file gambar Anda -->
+      <a href="akun-undawn.html" class="game-card">
+        <img src="images/icon.jpg" alt="Garena Undawn" onerror="this.src='images/sample.png'">
+        <div class="g-title">Garena Undawn</div>
+        <div class="g-desc">Akun & Spek</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- MODAL KERANJANG -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Keranjang Belanja</div>
+        <button class="close-modal" onclick="closeCheckoutModal()">✕</button>
+      </div>
+      <div class="cart-items-list" id="cartItemsContainer"></div>
+      <div class="checkout-summary" id="cartSummaryTotal">Total Belanja: <b>Rp 0</b></div>
+      <button class="btn-checkout-sosmed" id="checkoutSosmedBtn" onclick="openPaymentModalFromCart()" style="display: none;">Lanjut ke Pembayaran</button>
+    </div>
+  </div>
+
+  <!-- MODAL PEMBAYARAN -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Metode Pembayaran & Kontak Admin</div>
+        <button class="close-modal" onclick="closePaymentModal()">✕</button>
+      </div>
+      <div class="payment-method-box">
+        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 6px;">💳 Pilihan Metode Pembayaran:</div>
+        <div>• <b>QRIS</b> (Semua E-Wallet & Bank)</div>
+        <div>• <b>Transfer Bank</b> (BCA / Mandiri / SeaBank)</div>
+        <div>• <b>E-Wallet</b> (DANA / OVO / GoPay)</div>
+      </div>
+      <div class="admin-note-box">Silakan pilih salah satu kontak di bawah ini untuk mengirim pesanan:</div>
+      <div style="display: grid; gap: 6px;">
+        <a id="payWaBtn" href="#" target="_blank" class="contact-card-btn">
+          <img src="images/icon-wa.jpg" alt="WA" style="width: 22px; height: 22px; border-radius: 4px;">
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Hubungi Admin & Sosmed</div>
+        <button class="close-modal" onclick="closeAdminModal()">✕</button>
+      </div>
+      <div class="admin-note-box">⚠️ Mohon bersabar dan <b>jangan spam chat</b>.</div>
+      <div style="display: grid; gap: 8px;">
+        <a href="https://wa.me/6285137997544" target="_blank" class="contact-card-btn">
+          <img src="images/icon-wa.jpg" alt="WA" style="width: 24px; height: 24px; border-radius: 5px;">
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="aaq-bottom-nav">
+    <a href="index.html" class="aaq-nav-item">
+      <i class="fas fa-home"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="item-game.html" class="aaq-nav-item">
+      <i class="fas fa-gamepad"></i>
+      <span>Layanan</span>
+    </a>
+    <div class="aaq-nav-center">
+      <a href="rekber.html" class="aaq-fab-btn" title="Cek Rekber">
+        <i class="fas fa-shield-alt"></i>
+      </a>
+    </div>
+    <a href="testimoni.html" class="aaq-nav-item">
+      <i class="fas fa-star"></i>
+      <span>Testimoni</span>
+    </a>
+    <button class="aaq-nav-item" onclick="openAdminModal()">
+      <i class="fas fa-headset"></i>
+      <span>Admin</span>
+    </button>
+  </nav>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() { updateCartBadge(); });
+    function updateCartBadge() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      document.getElementById('mainCartBadge').innerText = cart.length;
+    }
+    function openCartModal() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      document.getElementById('modalTitle').innerText = "Keranjang Belanja (" + cart.length + ")";
+      let container = document.getElementById('cartItemsContainer');
+      let sosmedBtn = document.getElementById('checkoutSosmedBtn');
+      if (cart.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">Keranjang kosong.</div>`;
+        document.getElementById('cartSummaryTotal').innerHTML = `Total Belanja: <b>Rp 0</b>`;
+        sosmedBtn.style.display = 'none';
+        document.getElementById('checkoutModal').style.display = 'flex';
+        return;
+      }
+      let html = ""; let total = 0; let listStr = "";
+      cart.forEach((item, index) => {
+        total += item.price;
+        listStr += `- ${item.name} (${item.formatted})\n`;
+        html += `<div class="cart-item-row"><div><div style="font-weight:600;">${item.name}</div><div style="color:var(--accent-red);">${item.formatted}</div></div><button onclick="hapusItem(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer;">Hapus</button></div>`;
+      });
+      container.innerHTML = html;
+      document.getElementById('cartSummaryTotal').innerHTML = `Total Belanja: <b style="color:var(--accent-red);">Rp ${total.toLocaleString('id-ID')}</b>`;
+      window.currentOrderText = `Halo Admin AAQ Store, saya ingin memesan:\n\n${listStr}\n• Total Keseluruhan: Rp ${total.toLocaleString('id-ID')}\n\nMohon instruksi selanjutnya!`;
+      sosmedBtn.style.display = 'block';
+      document.getElementById('checkoutModal').style.display = 'flex';
+    }
+    function openPaymentModalFromCart() { closeCheckoutModal(); openPaymentModal(); }
+    function openPaymentModal() {
+      let text = window.currentOrderText || "";
+      document.getElementById('payWaBtn').href = `https://wa.me/6285137997544?text=${encodeURIComponent(text)}`;
+      document.getElementById('paymentModal').style.display = 'flex';
+    }
+    function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
+    function hapusItem(index) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartBadge();
+      openCartModal();
+    }
+    function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
+    function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }
+    function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+  </script>
+</body>
+</html>
