@@ -285,23 +285,23 @@
   </nav>
 
   <script>
-    // Nilai stok di bawah sudah otomatis dikurangi pajak 8% (nilai bersih siap tampil di web)
+    // Semua stok di-set 0 (Sold Out) secara otomatis oleh sistem
     const hotProducts = [
-      { id: 4, nama: "Akun Stok Gold #4 (Diskon / Grosir Besar)", stokM: 209.76, stokTeks: "209.760.000 Gold", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: true }
+      { id: 4, nama: "Akun Stok Gold #4 (Diskon / Grosir Besar)", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: true }
     ];
 
     const regularProducts = [
-      { id: 1, nama: "Akun Stok Gold #1 (Aman & Legal)", stokM: 17.3834, stokTeks: "17.383.400 Gold", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: false },
-      { id: 2, nama: "Akun Stok Gold #2 (Aman & Legal)", stokM: 17.77532, stokTeks: "17.775.320 Gold", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: false },
-      { id: 3, nama: "Akun Stok Gold #3 (Aman & Legal)", stokM: 17.5398, stokTeks: "17.539.800 Gold", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: false }
+      { id: 1, nama: "Akun Stok Gold #1 (Aman & Legal)", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: false },
+      { id: 2, nama: "Akun Stok Gold #2 (Aman & Legal)", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: false },
+      { id: 3, nama: "Akun Stok Gold #3 (Aman & Legal)", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "2 Jam", isGrosir: false }
     ];
 
     const newProducts = [
-      { id: 5, nama: "Akun Stok Gold Baru #5", stokM: 20.281363, stokTeks: "20.281.363 Gold", hargaPerM: 22000, tax: 0.08, proses: "In Progress", isGrosir: false },
-      { id: 6, nama: "Akun Stok Gold Baru #6", stokM: 20.448288, stokTeks: "20.448.288 Gold", hargaPerM: 22000, tax: 0.08, proses: "In Progress", isGrosir: false },
-      { id: 7, nama: "Akun Stok Gold Baru #7", stokM: 20.573482, stokTeks: "20.573.482 Gold", hargaPerM: 22000, tax: 0.08, proses: "In Progress", isGrosir: false },
-      { id: 8, nama: "Akun Stok Gold Baru #8", stokM: 20.698675, stokTeks: "20.698.675 Gold", hargaPerM: 22000, tax: 0.08, proses: "In Progress", isGrosir: false },
-      { id: 9, nama: "Akun Stok Gold Baru #9", stokM: 20.490019, stokTeks: "20.490.019 Gold", hargaPerM: 22000, tax: 0.08, proses: "In Progress", isGrosir: false }
+      { id: 5, nama: "Akun Stok Gold Baru #5", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "Habis", isGrosir: false },
+      { id: 6, nama: "Akun Stok Gold Baru #6", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "Habis", isGrosir: false },
+      { id: 7, nama: "Akun Stok Gold Baru #7", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "Habis", isGrosir: false },
+      { id: 8, nama: "Akun Stok Gold Baru #8", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "Habis", isGrosir: false },
+      { id: 9, nama: "Akun Stok Gold Baru #9", stokM: 0, stokTeks: "Habis Terjual", hargaPerM: 22000, tax: 0.08, proses: "Habis", isGrosir: false }
     ];
 
     let produkAktif = { nama: "", maxStokM: 0, hargaPerM: 22000, tax: 0.08, isGrosir: false };
@@ -375,21 +375,26 @@
       let newContainer = document.getElementById('newProductList');
       let newHtml = "";
       newProducts.forEach((p) => {
+        let isHabis = p.stokM <= 0;
+        let statusText = isHabis ? "Sold Out" : "Ready";
+        let statusClassLabel = isHabis ? "habis" : "";
+        let statusClass = isHabis ? "sold-out" : "";
+        let clickAction = isHabis ? "" : `onclick='bukaKalkulator(${JSON.stringify(p)})'`;
         let priceDisplay = `Mulai Rp ${p.hargaPerM.toLocaleString('id-ID')}`;
 
         newHtml += `
-          <div class="product-card" onclick='bukaKalkulator(${JSON.stringify(p)})'>
+          <div class="product-card ${statusClass}" ${clickAction}>
             <div class="p-title">${p.nama}</div>
             
             <div class="p-info-box">
               <div>Minimum Pembelian: <b>1M</b></div>
-              <div>Estimasi Proses: <span class="inprogress">${p.proses}</span></div>
-              <div>Status Stok: <span class="inprogress">${p.stokTeks}</span></div>
+              <div>Estimasi Proses: <b>${p.proses}</b></div>
+              <div>Status Stok: <span class="${isHabis ? 'habis' : ''}">${isHabis ? "Habis Terjual" : p.stokTeks}</span></div>
             </div>
 
             <div class="p-footer-actions">
               <div class="p-price">${priceDisplay} <span style="font-size:0.65rem; color:var(--text-muted); font-weight:normal;">/ 1M</span></div>
-              <div class="p-status-label inprogress">In Progress</div>
+              <div class="p-status-label ${statusClassLabel}">${statusText}</div>
             </div>
           </div>
         `;
@@ -462,8 +467,6 @@
       }
       
       let baseTotal = val * hargaPerMFinal;
-      
-      // Otomatis menambahkan 8% pajak untuk panduan pasang di market
       let nilaiPlusPajak = val * (1 + produkAktif.tax);
       let formatGoldTax = Math.round(nilaiPlusPajak * 1000000).toLocaleString('id-ID') + " Gold";
 
